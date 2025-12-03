@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "TPGraphicsEditor",
+            "request": "launch",
+            "mainClass": "tpgraphicseditor.TPGraphicsEditor",
+            "projectName": "TPGraphicsEditor_Etu_8e44f1b5"
+        },
+        {
+            "type": "java",
+            "name": "Launch TPGraphicsEditor",
+            "request": "launch",
+            "mainClass": "tpgraphicseditor.TPGraphicsEditor",
+            "projectName": "TPGraphicsEditor"
+        }
+    ]
+}

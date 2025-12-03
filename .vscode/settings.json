@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "build/classes",
+    "files.exclude": {
+        "**/*.class": true,
+        "**/build/classes/**": true
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
