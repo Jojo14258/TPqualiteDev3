@@ -44,7 +44,8 @@ public class Square extends Shape{
     }
 
     public DefaultMutableTreeNode getJTreeNodes() {
- 
-        return new DefaultMutableTreeNode(getType()+ "(Center["+center.x+", "+center.y +"], Size["+size+"]");
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(getType()+ "(Center["+center.x+", "+center.y +"], Size["+size+"]");
+        node.setUserObject(this);
+        return node;
     }
 }

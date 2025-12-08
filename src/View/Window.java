@@ -6,6 +6,8 @@ package View;
 
 
 import Controller.Controller_Add;
+import Controller.Controller_remove;
+import Controller.controller_Information;
 import Model.ShapeManager;
 import java.awt.Color;
 import java.util.Observable;
@@ -14,6 +16,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -23,6 +26,7 @@ public class Window extends javax.swing.JFrame implements Observer {
 
     private final GraphicsPainter painter;
     private ShapeManager data;
+    private controller_Information ctrl_info;
 
     /**
      * Creates new form Window
@@ -33,14 +37,15 @@ public class Window extends javax.swing.JFrame implements Observer {
         
         data = _data;
         data.addObserver(this);
-      
+        this.ctrl_info = new controller_Information(jTextPaneInformations);
         painter = new GraphicsPainter(data);
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 1));
         jPanel1.add(painter);
         
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Empty");
-        jTree_Objects.setModel(new DefaultTreeModel( root));
+        // Charger le modèle réel depuis ShapeManager
+        jTree_Objects.setModel(data.getTreeModel());
+        expandAllNodes(jTree_Objects);
 
         pack();
     }
@@ -236,6 +241,16 @@ public class Window extends javax.swing.JFrame implements Observer {
                 jButton_AddActionPerformed(evt);
             }
         });
+        jButton_Remove.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                jButton_RemoveActionPerformed(evt);
+
+                
+                
+            }
+        });
+
+
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -295,24 +310,39 @@ public class Window extends javax.swing.JFrame implements Observer {
         {
             ca.control("Circle", jButtonColor.getBackground());
             
-            jTextPaneInformations.setText("Circle added");
+            ctrl_info.displayMessage("Cercle ajouté");
         }
         else if(jRadioSquare.isSelected()){
             ca.control("Square", jButtonColor.getBackground());
-            jTextPaneInformations.setText("Square added");
+            ctrl_info.displayMessage(("Carré ajouté"));
 
         }
         else if(jRadioRectangle.isSelected()){
             ca.control("Rectangle", jButtonColor.getBackground());
-            jTextPaneInformations.setText("Rectangle added");
+            ctrl_info.displayMessage(("rectangle ajouté"));
+
         }
     }//GEN-LAST:event_jButton_AddActionPerformed
+
+    private void jButton_RemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RemoveActionPerformed
+        TreePath[] paths = jTree_Objects.getSelectionPaths();
+        
+        if (paths == null || paths.length == 0) {
+            ctrl_info.displayMessage("Aucun élément sélectionné");
+            return;
+        }
+        
+        Controller_remove ctrl_remove = new Controller_remove(data);
+        ctrl_remove.control(paths);
+        
+        ctrl_info.displayMessage("Élément(s) supprimé(s)");
+    }//GEN-LAST:event_jButton_RemoveActionPerformed
 
     private void jButtonColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonColorActionPerformed
         Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
         
         jButtonColor.setBackground(newColor);
-        jTextPaneInformations.setText("Color Changed");
+        ctrl_info.displayMessage("Couleur changé");
 
     }//GEN-LAST:event_jButtonColorActionPerformed
 
@@ -322,10 +352,10 @@ public class Window extends javax.swing.JFrame implements Observer {
         painter.repaint();
         
         // Reload JTree
-        //TreePath[] selectionPaths = jTree_Objects.getSelectionPaths(); // need to reload and not to use setModel...
+        TreePath[] selectionPaths = jTree_Objects.getSelectionPaths(); // need to reload and not to use setModel...
         jTree_Objects.setModel( data.getTreeModel());
         expandAllNodes(jTree_Objects);
-        //jTree_Objects.setSelectionPaths(selectionPaths);
+        jTree_Objects.setSelectionPaths(selectionPaths);
         
         // Properties
         jSpinnerPositionX.setEnabled(false);

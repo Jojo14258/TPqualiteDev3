@@ -42,6 +42,8 @@ public class Rectangle extends Shape {
     }
 
     public DefaultMutableTreeNode getJTreeNodes() {
-        return new DefaultMutableTreeNode(getType() + "(Center[" + center.x + ", " + center.y + "], Width[" + width + "], Height[" + height + "])");
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(getType() + "(Center[" + center.x + ", " + center.y + "], Width[" + width + "], Height[" + height + "]");
+        node.setUserObject(this);
+        return node;
     }
 }

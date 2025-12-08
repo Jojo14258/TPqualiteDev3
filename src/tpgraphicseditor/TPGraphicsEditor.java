@@ -19,6 +19,7 @@ public class TPGraphicsEditor {
     public static void main(String[] args) {
 
         ShapeManager data = new ShapeManager();
+        data.init();
         
         /* Create and display the form */
         new Window(data).setVisible(true);

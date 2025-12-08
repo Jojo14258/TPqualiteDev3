@@ -65,6 +65,7 @@ public class Group  extends Shape{
     @Override
     public DefaultMutableTreeNode getJTreeNodes() {
         DefaultMutableTreeNode architecture = new DefaultMutableTreeNode("Group");
+        architecture.setUserObject(this);
         for(Shape shape : listeShape ){
             architecture.add(shape.getJTreeNodes());
         }

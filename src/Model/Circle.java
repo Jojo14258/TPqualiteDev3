@@ -50,7 +50,8 @@ public class Circle extends Shape {
     }
 
     public DefaultMutableTreeNode getJTreeNodes() {
- 
-        return new DefaultMutableTreeNode(getType()+ "(Center["+center.x+", "+center.y +"], R["+radius+"]");
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(getType()+ "(Center["+center.x+", "+center.y +"], R["+radius+"]");
+        node.setUserObject(this);
+        return node;
     }
 }

@@ -28,21 +28,24 @@ public class ShapeManager extends Observable {
     public void init()
     {
 
-        // Créer quelques formes de test
+        //  formes de test
         Circle c1 = new Circle(new Point(50, 50), Color.RED);
         Circle c2 = new Circle(new Point(150, 150), Color.BLUE);
         Square s1 = new Square(new Point(100, 200), Color.GREEN);
         
-        // Créer un sous-groupe
+        //Sous groupes
         Group subGroup = new Group(Color.BLACK);
         subGroup.add(new Circle(new Point(200, 100), Color.YELLOW));
         subGroup.add(new Rectangle(new Point(250, 50), Color.ORANGE));
         
-        // Ajouter au groupe racine
+        // groupe racine
         group.add(c1);
         group.add(c2);
         group.add(s1);
         group.add(subGroup);
+        
+        System.out.println("=== Structure de l'arborescence ===");
+        System.out.println(group.toString(0));
         
         setChanged();
         notifyObservers();
@@ -51,6 +54,14 @@ public class ShapeManager extends Observable {
     public void add(Shape shape)
     {
         group.add(shape);
+
+        setChanged();
+        notifyObservers();
+    }
+    
+    public void remove(Shape shape)
+    {
+        group.remove(shape);
 
         setChanged();
         notifyObservers();
