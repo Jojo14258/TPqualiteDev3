@@ -37,7 +37,9 @@ public class Group  extends Shape{
         
         return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
     }
-
+    public ArrayList<Shape> getChildren() {
+        return listeShape; 
+    }
     @Override
     public String getType() {
         return "Group";

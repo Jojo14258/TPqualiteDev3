@@ -6,7 +6,9 @@ package View;
 
 
 import Controller.Controller_Add;
+import Controller.Controller_group;
 import Controller.Controller_remove;
+import Controller.Controller_ungroup;
 import Controller.controller_Information;
 import Model.ShapeManager;
 import java.awt.Color;
@@ -250,7 +252,17 @@ public class Window extends javax.swing.JFrame implements Observer {
             }
         });
 
+        jButton_Group.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                jButton_GroupActionPerformed(evt);
+            }
+        });
 
+        jButton_UnGroup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                jButton_UngroupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -323,6 +335,30 @@ public class Window extends javax.swing.JFrame implements Observer {
 
         }
     }//GEN-LAST:event_jButton_AddActionPerformed
+
+    private void jButton_UngroupActionPerformed(java.awt.event.ActionEvent evt) {
+        TreePath[] paths = jTree_Objects.getSelectionPaths();
+        
+        if (paths == null || paths.length == 0) {
+            ctrl_info.displayMessage("Aucun élément sélectionné");
+            return;
+        }
+
+        Controller_ungroup ctrl_ungroup = new Controller_ungroup(data);
+        ctrl_ungroup.control(paths);
+    }
+
+    private void jButton_GroupActionPerformed(java.awt.event.ActionEvent evt) {
+        TreePath[] paths = jTree_Objects.getSelectionPaths();
+        
+        if (paths == null || paths.length == 0) {
+            ctrl_info.displayMessage("Aucun élément sélectionné");
+            return;
+        }
+
+        Controller_group ctrl_group = new Controller_group(data);
+        ctrl_group.control(paths);
+    }
 
     private void jButton_RemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RemoveActionPerformed
         TreePath[] paths = jTree_Objects.getSelectionPaths();

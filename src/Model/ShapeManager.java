@@ -66,6 +66,12 @@ public class ShapeManager extends Observable {
         setChanged();
         notifyObservers();
     }
+    
+    public void notifyChange()
+    {
+        setChanged();
+        notifyObservers();
+    }
 
     @Override
     public String toString() {
