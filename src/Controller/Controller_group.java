@@ -61,7 +61,6 @@ public class Controller_group {
             newGroup.add(shape);
         }
         
-        // Ajouter le groupe au bon endroit
         if(sameParent){
             firstParent.add(newGroup);
             this.data.notifyChange();

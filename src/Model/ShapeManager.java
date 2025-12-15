@@ -18,8 +18,9 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class ShapeManager extends Observable {
 
-    Group group;
-    
+    public Group group;
+    private Shape selectedShape = null;
+
     public ShapeManager()
     {
         group = new Group(Color.BLACK);
@@ -71,6 +72,18 @@ public class ShapeManager extends Observable {
     {
         setChanged();
         notifyObservers();
+    }
+    
+    public void setSelectedShape(Shape shape)
+    {
+        this.selectedShape = shape;
+        setChanged();
+        notifyObservers();
+    }
+    
+    public Shape getSelectedShape()
+    {
+        return this.selectedShape;
     }
 
     @Override

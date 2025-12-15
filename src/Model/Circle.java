@@ -48,6 +48,19 @@ public class Circle extends Shape {
         g.setColor(Color.black);
         g.drawOval(center.x,center.y,(int)radius,(int)radius);
     }
+    
+    // Getters pour accéder aux propriétés
+    public Point getCenter() {
+        return center;
+    }
+    
+    public double getRadius() {
+        return radius;
+    }
+    
+    public Color getColor() {
+        return color;
+    }
 
     public DefaultMutableTreeNode getJTreeNodes() {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(getType()+ "(Center["+center.x+", "+center.y +"], R["+radius+"]");

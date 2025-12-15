@@ -1,7 +1,9 @@
 package Controller;
 
+import Model.Group;
 import Model.Shape;
 import Model.ShapeManager;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -16,12 +18,20 @@ public class Controller_remove {
     public void control(TreePath[] paths){
         for(TreePath path : paths){
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            
             Object userObject = node.getUserObject();
             
             if(userObject instanceof Shape){
-                this.data.remove((Shape) userObject);
+                TreePath parentPath = path.getParentPath();
+                DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) parentPath.getLastPathComponent();
+                Object parentObject = parentNode.getUserObject();
+                
+                if(parentObject instanceof Group){
+                    Group parent = (Group) parentObject;
+                    parent.remove((Shape) userObject);
+                }
             }
         }
+        
+        this.data.notifyChange();
     }
 }

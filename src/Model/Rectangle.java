@@ -40,6 +40,23 @@ public class Rectangle extends Shape {
         g.setColor(Color.black);
         g.drawRect(center.x, center.y, (int)width, (int)height);
     }
+    
+    // Getters pour accéder aux propriétés
+    public Point getCenter() {
+        return center;
+    }
+    
+    public double getWidth() {
+        return width;
+    }
+    
+    public double getHeight() {
+        return height;
+    }
+    
+    public Color getColor() {
+        return color;
+    }
 
     public DefaultMutableTreeNode getJTreeNodes() {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(getType() + "(Center[" + center.x + ", " + center.y + "], Width[" + width + "], Height[" + height + "]");

@@ -10,7 +10,10 @@ import Controller.Controller_group;
 import Controller.Controller_remove;
 import Controller.Controller_ungroup;
 import Controller.controller_Information;
+import Model.Circle;
+import Model.Shape;
 import Model.ShapeManager;
+import Model.Square;
 import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
@@ -48,6 +51,16 @@ public class Window extends javax.swing.JFrame implements Observer {
         // Charger le modèle réel depuis ShapeManager
         jTree_Objects.setModel(data.getTreeModel());
         expandAllNodes(jTree_Objects);
+        
+        // Ajouter MouseListener pour détecter le double-clic
+        jTree_Objects.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {  // Double-clic
+                    jTree_ObjectsDoubleClick(evt);
+                }
+            }
+        });
 
         pack();
     }
@@ -71,6 +84,7 @@ public class Window extends javax.swing.JFrame implements Observer {
         jTree_Objects = new javax.swing.JTree();
         jLabel1 = new javax.swing.JLabel();
         jButton_UnGroup = new javax.swing.JButton();
+        jButton_Confirm = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jSpinnerPositionX = new javax.swing.JSpinner();
         jSpinnerPositionY = new javax.swing.JSpinner();
@@ -124,6 +138,8 @@ public class Window extends javax.swing.JFrame implements Observer {
         jLabel1.setText("Properties");
 
         jButton_UnGroup.setText("UnGroup");
+
+        jButton_Confirm.setText("Confirm");
 
         jLabel2.setText("Center");
 
@@ -189,7 +205,9 @@ public class Window extends javax.swing.JFrame implements Observer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton_Group)
                         .addGap(8, 8, 8)
-                        .addComponent(jButton_UnGroup))
+                        .addComponent(jButton_UnGroup)
+                        .addGap(8, 8, 8)
+                        .addComponent(jButton_Confirm))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -217,7 +235,8 @@ public class Window extends javax.swing.JFrame implements Observer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton_Group)
                     .addComponent(jButton_Remove)
-                    .addComponent(jButton_UnGroup))
+                    .addComponent(jButton_UnGroup)
+                    .addComponent(jButton_Confirm))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -261,6 +280,12 @@ public class Window extends javax.swing.JFrame implements Observer {
         jButton_UnGroup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt){
                 jButton_UngroupActionPerformed(evt);
+            }
+        });
+
+        jButton_Confirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                jButton_ConfirmActionPerformed(evt);
             }
         });
 
@@ -382,6 +407,26 @@ public class Window extends javax.swing.JFrame implements Observer {
 
     }//GEN-LAST:event_jButtonColorActionPerformed
 
+    private void jButton_ConfirmActionPerformed(java.awt.event.ActionEvent evt) {
+        Shape selectedShape = data.getSelectedShape();
+        
+        if (selectedShape == null) {
+            ctrl_info.displayMessage("Aucune forme sélectionnée");
+            return;
+        }
+        
+        // Récupérer les valeurs des spinners
+        int newX = (Integer) jSpinnerPositionX.getValue();
+        int newY = (Integer) jSpinnerPositionY.getValue();
+        int newRadiusOrSize = (Integer) jSpinnerRadius.getValue();
+        Color newColor = jButtonColor.getBackground();
+        
+        // TODO: Appliquer les modifications à la forme sélectionnée
+        ctrl_info.displayMessage("Valeurs récupérées - X: " + newX + ", Y: " + newY + 
+                                ", Radius/Size: " + newRadiusOrSize + 
+                                ", Color: RGB(" + newColor.getRed() + "," + newColor.getGreen() + "," + newColor.getBlue() + ")");
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         painter.revalidate();
@@ -393,10 +438,44 @@ public class Window extends javax.swing.JFrame implements Observer {
         expandAllNodes(jTree_Objects);
         jTree_Objects.setSelectionPaths(selectionPaths);
         
-        // Properties
-        jSpinnerPositionX.setEnabled(false);
-        jSpinnerPositionY.setEnabled(false);
-        jSpinnerRadius.setEnabled(false);
+        // Properties - affichage des propriétés de la forme sélectionnée
+        Shape selectedShape = data.getSelectedShape();
+        
+        if (selectedShape != null) {
+            // Activer les spinners
+            jSpinnerPositionX.setEnabled(true);
+            jSpinnerPositionY.setEnabled(true);
+            jSpinnerRadius.setEnabled(true);
+            
+            // Afficher les propriétés selon le type de forme
+            if (selectedShape instanceof Circle) {
+                Circle circle = (Circle) selectedShape;
+                jSpinnerPositionX.setValue(circle.getCenter().x);
+                jSpinnerPositionY.setValue(circle.getCenter().y);
+                jSpinnerRadius.setValue((int)circle.getRadius());
+                jButtonColor.setBackground(circle.getColor());
+            } 
+            else if (selectedShape instanceof Square) {
+                Square square = (Square) selectedShape;
+                jSpinnerPositionX.setValue(square.getCenter().x);
+                jSpinnerPositionY.setValue(square.getCenter().y);
+                jSpinnerRadius.setValue((int)square.getSize());
+                jButtonColor.setBackground(square.getColor());
+            }
+            else if (selectedShape instanceof Model.Rectangle) {
+                Model.Rectangle rectangle = (Model.Rectangle) selectedShape;
+                jSpinnerPositionX.setValue(rectangle.getCenter().x);
+                jSpinnerPositionY.setValue(rectangle.getCenter().y);
+                // Pour le rectangle, afficher la largeur dans le spinner "Radius"
+                jSpinnerRadius.setValue((int)rectangle.getWidth());
+                jButtonColor.setBackground(rectangle.getColor());
+            }
+        } else {
+            // Désactiver les spinners si aucune forme sélectionnée
+            jSpinnerPositionX.setEnabled(false);
+            jSpinnerPositionY.setEnabled(false);
+            jSpinnerRadius.setEnabled(false);
+        }
 
     }
     
@@ -409,10 +488,35 @@ public class Window extends javax.swing.JFrame implements Observer {
             j = tree.getRowCount();
         }
     }
+    
+    private void jTree_ObjectsDoubleClick(java.awt.event.MouseEvent evt) {
+        TreePath path = jTree_Objects.getPathForLocation(evt.getX(), evt.getY());
+        
+        if (path == null) {
+            return; // Pas de nœud cliqué
+        }
+        
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        Object userObject = node.getUserObject();
+        
+        if (userObject instanceof Shape) {
+            Shape shape = (Shape) userObject;
+            
+            data.setSelectedShape(shape);
+            
+            ctrl_info.displayMessage("Shape sélectionnée : " + shape.getType());
+        } else {
+            // Si c'est un Group ou autre, désélectionner
+            data.setSelectedShape(null);
+            ctrl_info.displayMessage("Veuillez sélectionner une forme (pas un groupe)");
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonColor;
     private javax.swing.JButton jButton_Add;
+    private javax.swing.JButton jButton_Confirm;
     private javax.swing.JButton jButton_Group;
     private javax.swing.JButton jButton_Remove;
     private javax.swing.JButton jButton_UnGroup;
